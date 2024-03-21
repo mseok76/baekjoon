@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-
 #define MAX 100001
 bool visited[2][MAX];
 int arr[MAX], N, cnt;
