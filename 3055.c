@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct Node{
     int data;
@@ -20,17 +21,19 @@ void water_diffuse(int y,int x);
 int hod_diffuse(int y,int x);
 char **array;
 int w,h;
-Queue *hod;
-Queue *water;
+Queue Hod,Water;
+Queue *hod = &Hod;
+Queue *water = &Water;
 
 int main(){
     initQueue(hod);
     initQueue(water);
     scanf("%d %d",&h,&w);
-    array = (char**)malloc(h,sizeof(char*));
+    array = (char**)malloc(h*sizeof(char*));
     for(int i=0;i<h;i++){
-        array[i] = (char*)malloc(w,sizeof(char));
+        array[i] = (char*)malloc(w*sizeof(char));
     }
+    getchar();
 
     for(int i=0;i<h;i++){
         for(int j=0;j<w;j++){
@@ -38,12 +41,20 @@ int main(){
             if(array[i][j] == 'S'){
                 enqueue(hod,i);
                 enqueue(hod,j);
+                array[i][j] = '.';
             }else if(array[i][j] == '*'){
                 enqueue(water,i);
                 enqueue(water,j);
             }
         }
+        getchar();
     }
+    for(int i=0;i<h;i++){
+        for(int j=0;j<w;j++){
+            printf("%c",array[i][j]);
+        }printf("\n");
+    }
+
     int depth =0,a;
     a = bfs(hod, water);
     if(a == -1){
@@ -59,6 +70,7 @@ int main(){
 int bfs(Queue *hod, Queue *water){
     int x,y,a, count =0;
     do{
+        printf("%d\n",count);
         count ++;
         for(int i=0;i<water -> count;i+=2){
             y = dequeue(water);
@@ -66,9 +78,9 @@ int bfs(Queue *hod, Queue *water){
             water_diffuse(y,x);
         }
 
-        for(int i=0;i<water -> count;i+=2){
-            y = dequeue(water);
-            x = dequeue(water);
+        for(int i=0;i<hod -> count;i+=2){
+            y = dequeue(hod);
+            x = dequeue(hod);
             a = hod_diffuse(y,x);
             if(a) return count;
         }
@@ -79,33 +91,37 @@ int bfs(Queue *hod, Queue *water){
 
 int hod_diffuse(int y, int x){
     if(y+1 < h){
-        if(array[y+1][x] == 'D'){
+        y++;
+        if(array[y][x] == 'D'){
             return 1;
-        }else if(array[y+1][x] == '.'){
+        }else if(array[y][x] == '.'){
             enqueue(hod, y);
             enqueue(hod, x);
         }
     }
     if(y > 0){
-        if(array[y-1][x] == 'D'){
+        y--;
+        if(array[y][x] == 'D'){
             return 1;
-        }else if(array[y-1][x] == '.'){
+        }else if(array[y][x] == '.'){
             enqueue(hod, y);
             enqueue(hod, x);
         }
     }
     if(x+1 < w){
-        if(array[y][x+1] == 'D'){
+        x++;
+        if(array[y][x] == 'D'){
             return 1;
-        }else if(array[y][x+1] == '.'){
+        }else if(array[y][x] == '.'){
             enqueue(hod, y);
             enqueue(hod, x);
         }
     }
-    if(y > 0){
-        if(array[y-1][x] == 'D'){
+    if(x > 0){
+        x--;
+        if(array[y][x] == 'D'){
             return 1;
-        }else if(array[y-1][x] == '.'){
+        }else if(array[y][x] == '.'){
             enqueue(hod, y);
             enqueue(hod, x);
         }
@@ -114,25 +130,46 @@ int hod_diffuse(int y, int x){
 
 void water_diffuse(int y, int x){
     if(y+1 < h){
-
+        y++;
+        if(array[y][x] == '.'){
+            enqueue(water, y);
+            enqueue(water, x);
+        }
     }
     if(y > 0){
-
+        y--;
+        if(array[y][x] == '.'){
+            enqueue(water, y);
+            enqueue(water, x);
+        }
     }
     if(x+1 < w){
-
+        x++;
+        if(array[y][x] == '.'){
+            enqueue(water, y);
+            enqueue(water, x);
+        }
     }
-    if(y > 0){
-        
+    if(x > 0){
+        x--;
+        if(array[y][x] == '.'){
+            enqueue(water, y);
+            enqueue(water, x);
+        }
     }
 }
 
 void initQueue(Queue *queue){
-    return queue -> count =0;
+    queue -> count = 0;
+    return;
 }
 
 int isempty(Queue *queue){
-    return queue->count == 0;
+    if(queue->count == 0){
+        return 1;
+    }else{
+        return 0;
+    }
 }
 
 void enqueue(Queue *queue, int data){
