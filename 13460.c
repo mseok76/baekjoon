@@ -20,7 +20,7 @@ typedef struct Queue{
 }Queue;
 
 int* dequeue(Queue *queue);
-void enqueue(Queue *queue, int *data);
+void enqueue(Queue *queue, data point);
 int isempty(Queue *queue);
 void initQueue(Queue *queue);
 int move();
