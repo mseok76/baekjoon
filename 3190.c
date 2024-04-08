@@ -54,25 +54,25 @@ int main(){
     scanf("%d",&n); //n is size of map
     scanf("%d",&k); //k is number of apple
     for(int i=0;i<k;i++){
-        scanf("%d %d",&x,&y);
+        scanf("%d %d",&y,&x);
         map[--y][--x] = 2;
     }
     scanf("%d",&l);
     for(int i =0;i<l;i++){
         scanf("%d %c",&init, &aa);
-        direction[init-1] = aa;
+        direction[init] = aa;
     }
     x=0;
     y=0;
-    for(int i =0;i<n;i++){
-        for(int j=0;j<n;j++){
-            printf("%d ",map[i][j]);
-        }
-        printf("\n");
-    }
+    // for(int i =0;i<n;i++){
+    //     for(int j=0;j<n;j++){
+    //         printf("%d ",map[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     for(time=0;time<10000;){
-        printf("count: %d\n",count);
+        // printf("count: %d\n",count);
         if(direction[time] > 'A'){
             if(direction[time] == 'D'){
                 if(dir == 0){
@@ -95,18 +95,19 @@ int main(){
         if(x >= n||y>=n||x<0||y<0){ //wall
             break;
         }
-        printf("%d %d\n",x,y);
+
+        
+        if (map[y][x] == 1 ){
+            break;
+        }
         enqueue(x,y);
+        // printf("%d %d\n",x,y);
         if(map[y][x] != 2){
             temp = dequeue();
             map[temp->y][temp->x] = 0;
             free(temp);
-        }
-        if (map[y][x] == 1 ){
-            break;
-        }else{
-            map[y][x] = 1;
-        }
+        }        
+        map[y][x] = 1;
     }
-    printf("%d",time+2);
+    printf("%d",time);
 }
