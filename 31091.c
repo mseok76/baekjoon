@@ -1,26 +1,35 @@
 #include <stdio.h>
 
 int main(){
-    int n,k,cnt,tot=0;
-    int ret[500000];
-    int arr[500000];
-    scanf("%d",&n);
-    for(int i =0;i<n;i++){
-        scanf("%d",&arr[i]);
-    }
-    for(k=0;k<=n;k++){
-        cnt =0;
-        for(int i =0;i<n;i++){
-            if(arr[i] < 0){
-                if((-arr[i])<k) cnt++;
-            }else{
-                if(arr[i] > k) cnt++;
-            }
+    int n;
+    scanf("%d", &n);
+
+    int arr[500001] = {0};
+
+    for (int i = 0; i < n; i++) {
+        int x;
+        scanf("%d", &x);
+        if (x <= 0) {
+            arr[-x+1]++;
+        } else {
+            arr[0]++;
+            arr[x]--;
         }
-        if(cnt == k) ret[tot++] = k;
     }
-    printf("%d\n",tot);
-    for(int i =0;i<tot;i++){
-        printf("%d ",ret[i]);
+
+    int count = 0, sum = 0;
+    int possible[500001];
+    for (int i = 0; i <= n; i++) {
+        sum += arr[i];
+        if (sum == i) {
+            possible[count++] = i;
+        }
     }
+
+    printf("%d\n", count);
+    for (int i = 0; i < count; i++) {
+        printf("%d ", possible[i]);
+    }
+
+    return 0;
 }
