@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 int stack[100000];
 int top,i,prev;
@@ -7,49 +8,44 @@ void stack_init();
 
 int main(){
     stack_init();
-    int arr[100000];
-    int n, max=0,min = 1000000;
+    bool output[200000];
+    int n, input, t= 0;
     scanf("%d",&n);
-
-    for(int j = 0;j<n;j++){ //check NO case
-        scanf("%d",&arr[j]);
-        if(prev < arr[j]){
-            if(arr[j] < max){
-                printf("NO\n");
-                return 0;
-            }else max = arr[j];
-        }else{
-            if(arr[j] > min){
-                printf("NO\n");
-                return 0;
-            }else min = arr[j];
-            
-        }
-        prev = arr[j];
-    }
 
     stack_init();
 
     for(int j = 0;j<n;j++){ //check NO case
-        if(prev < arr[j]){
+        scanf("%d",&input);
+        if(prev < input){      //pushing to reach the target    
 
-            while(i != arr[j]){
+            while(i != input){
                 stack[++top] = i++;
-                printf("+\n");
+                if(i > input){
+                    printf("NO\n");
+                    return 0;
+                }
+                output[t++] = 1;
             }
             stack[++top] = i++;
-            printf("+\n");
+            output[t++] = 1;
 
             top--;
-            printf("-\n");
-        }else{
+            output[t++] = 0;
+        }else{              //poping to reach the target
 
-            while(stack[top--] != arr[j]){
-                printf("-\n");
+            while(stack[top--] != input){
+                if(stack[top+1] < input){
+                    printf("NO\n");
+                    return 0;
+                }
+                output[t++] = 0;
             }
-            printf("-\n");
+            output[t++] = 0;
         }
-        prev = arr[j];
+        prev = input;
+    }
+    for(int j = 0;j<t;j++){
+        printf("%c\n", output[j]?'+':'-');
     }
 }
 
