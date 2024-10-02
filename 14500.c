@@ -1,83 +1,57 @@
 //테트로미노
+//브루트포스
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <memory.h>
 
-int** map;
-bool** check;
-int m,n;
-dir_x[4] = {0,0,-1,1};      //상하좌우
-dir_y[4] = {-1,1,0,0};
-
-int DFS(int x, int y){      //answer -> recursion
-    //3direction
-
-    for(int i=0;i<4;i++){
-        if(x+dir_x[i]<0||x+dir_x[i]>=m||y+dir_y[i]<0||y+dir_y[y]>=n){
-            continue;
-        }
-        //check
-        //sum & add check
-        for(int j=0;j<4;j++){
-            if(x+dir_x[i]+dir_x[j]<0||x+dir_x[i]+dir_x[j]>=m||y+dir_y[i]+dir_y[j]<0||y+dir_y[y]+dir_y[j]>=n){
-                continue;
-            }
-            //check
-            //sum & add check
-        }
-    }
-
-
-
-    //seperated node
-
-}
-
-void reset_check(){
-    memset(check,0,sizeof(bool)*n*m);
-}
 
 int main(){
-    int temp, max=0;
+    //define every shape
+    int tetris[19][6] = {  //x y 순으로 나머지 3개의 점에 대한 상대 좌표
+    {1,0,2,0,3,0},{0,1,0,2,0,3},{1,0,0,1,1,1},
+    {0,1,0,2,1,2},{0,1,0,2,-1,2},{1,0,0,1,0,2},{1,0,1,1,1,2},
+    {0,1,1,1,2,1},{0,1,1,0,2,0},{1,0,2,0,2,-1},{1,0,2,0,2,1},
+    {0,1,1,1,1,2},{0,1,-1,1,-1,2},{1,0,1,1,2,1},{1,0,1,-1,2,-1},
+    {1,0,1,1,2,0},{1,0,1,-1,2,0},{0,1,1,1,0,2},{0,1,-1,1,0,2}
+    };
+
+    int n,m,i,j;    //세로가 n,y 가로가 m,x
     scanf("%d %d",&n,&m);
-    map = (int**)malloc(n*sizeof(int*));
-    check = (bool**)malloc(n*sizeof(bool*));
-    for(int i =0;i<n;n++){
+    int** map = (int**)calloc(n,sizeof(int*));
+    for(i =0;i<n;i++){
         map[i] = (int*)calloc(m,sizeof(int));
-        check[i] = (bool*)calloc(m,sizeof(bool));
-    }
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
+        for(j = 0;j<m;j++){
             scanf("%d",&map[i][j]);
         }
     }
-
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(j < m-1){
-                check[i][j] = 1;
-                check[i][j+1] = 1;
-                temp = map[i][j]+map[i][j+1];
-                temp += DFS(j,i);
-                if(max < temp){
-                    max = temp;
+    // printf("flag\n");
+    // for(i = 0;i<n;i++){
+        
+    // }
+    int x,y,temp,ans = 0;
+    for(i =0;i<n;i++){
+        for(j=0;j<m;j++){
+            for(int k =0;k<19;k++){
+                temp = map[i][j];
+                for(int t = 0;t<3;t++){
+                    x = j + tetris[k][2*t];
+                    y = i + tetris[k][2*t+1];
+                    if(x < 0 || x >= m || y < 0 || y >= n){
+                        temp =0;
+                        break;
+                    }
+                    temp += map[y][x];
                 }
-                reset_check();
-            }
-
-            if(i < n-1){
-                check[i][j] = 1;
-                check[i+1][j] = 1;
-                temp = map[i][j]+map[i+1][j];
-                temp += DFS(j,i);
-                if(max < temp){
-                    max = temp;
+                if(temp > ans){
+                        ans = temp;
                 }
-                reset_check();
             }
         }
     }
-    printf("%d",max);
+    printf("%d\n",ans);
+
+    for(i=0;i<n;i++){
+        free(map[i]);
+    }
+    free(map);
 }
