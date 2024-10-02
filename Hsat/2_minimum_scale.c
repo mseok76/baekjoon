@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int arr[20][100][2];
-int cnt_k[5];
+int cnt_k[20];
 int K,ans;
 
 void DFS(int k, int minx, int miny, int maxx, int maxy);
@@ -27,6 +27,7 @@ int main(void)
         arr[k-1][cnt_k[k-1]][1] = y;
         cnt_k[k-1]++;
     }
+    
     ans = 5000000;
     // printf("\n");
     // for(i =0; i<5;i++){
@@ -40,27 +41,22 @@ int main(void)
         maxy = arr[0][i][1];
         // printf("+");
         DFS(1,minx,miny,maxx,maxy);
+        if(ans == 0){
+            break;
+        }
     }
     printf("%d",ans);
     return 0;
 }
-// 7 3
-// -4 0 1
-// -5 -1 1
-// 0 43 2
-// 3 23 3
-// 8 -19 2
-// 10 0 3
-// 20 0 2
+
 void DFS(int k, int minx, int miny, int maxx, int maxy){
     //현재 min 값 backup... int 값으로 전달이므로 필요x
     int x,y,size;
     int axis[4] = {minx,miny,maxx,maxy};
     for(int i =0;i<cnt_k[k];i++){
-        axis[0] = minx;
-        axis[1] = miny;
-        axis[2] = maxx;
-        axis[3] = maxy;
+        if(ans == 0){
+            break;
+        }
         // printf("flag %d-%d\n",k,i);
         x = arr[k][i][0];
         y = arr[k][i][1];
@@ -71,13 +67,20 @@ void DFS(int k, int minx, int miny, int maxx, int maxy){
         }else if(maxx < x){
             axis[0] = minx;
             axis[2] = x;
+        }else{
+            axis[0] = minx;
+            axis[2] = maxx;
         }
+        
         if(miny > y){
             axis[1] = y;
             axis[3] = maxy;
         }else if(maxy < y){
             axis[1] = miny;
             axis[3] = y;
+        }else{
+            axis[1] = miny;
+            axis[3] = maxy;
         }
         // printf("-y %d %d\n",axis[1],axis[3]);
         size = (axis[2] - axis[0])*(axis[3] - axis[1]);
