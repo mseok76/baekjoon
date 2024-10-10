@@ -21,12 +21,11 @@ int solution(int** points, size_t points_rows, size_t points_cols, int** routes,
     //차 위치 초기화
     car cars[100];
     for(i=0;i<routes_rows;i++){
-        cars[i].cnt_route = 0;
-        x = points[routes[i][0]][1] -1;
-        y = points[routes[i][0]][0] -1;
-        cars[i].y = points[routes[i][0]][0] -1; //r,c는 1부터 시작이기 때문에 -1
-        cars[i].x = points[routes[i][0]][1] -1;
-        // map[y][x]++;
+        cars[i].cnt_route = 1;
+        cars[i].y = points[routes[i][0]-1][0] -1; //r,c는 1부터 시작이기 때문에 -1
+        cars[i].x = points[routes[i][0]-1][1] -1;
+        map[cars[i].y][cars[i].x]++;
+        // printf("yx:%d %d\n",cars[i].y,cars[i].x);
     }
     for(i =0;i<100;i++){
             for(j=0;j<100;j++){
@@ -34,13 +33,14 @@ int solution(int** points, size_t points_rows, size_t points_cols, int** routes,
                 map[i][j]=0;
             }
         }
+    // printf("flag: %d\n",ans);
     //이동 및 충돌확인
-    while(end_car == routes_rows){  //모든 차 이동 종료시 끝
-        for(int i=0;i<routes_rows;i++){ //모든 차 반복
+    while(end_car != routes_rows){  //모든 차 이동 종료시 끝
+        for(int i=0;i<routes_rows;i++){ //모든 차 이동
             if(cars[i].cnt_route == routes_cols)continue;
             //차 이동 y먼저
-            y = points[routes[i][cars[i].cnt_route]][0] - 1;
-            x = points[routes[i][cars[i].cnt_route]][1] - 1;
+            y = points[routes[i][cars[i].cnt_route]-1][0] - 1;
+            x = points[routes[i][cars[i].cnt_route]-1][1] - 1;
             if(y > cars[i].y){
                 cars[i].y++;
             }else if(y < cars[i].y){
@@ -52,7 +52,7 @@ int solution(int** points, size_t points_rows, size_t points_cols, int** routes,
                     cars[i].x--;
                 }else{
                     //ERR
-                    printf("ERR\n");
+                    // printf("ERR car yx:%d %d, target yx:%d %d\n",cars[i].y,cars[i].x,y,x);
                 }
             }
             //위치에 점수 추가 
@@ -72,6 +72,8 @@ int solution(int** points, size_t points_rows, size_t points_cols, int** routes,
                 map[i][j]=0;
             }
         }
+        // printf("move yx: %d %d\n",cars[0].y,cars[0].x);
     }
+    // printf("%d\n",ans);
     return ans;
 }
